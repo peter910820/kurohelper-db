@@ -8,13 +8,14 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/peter910820/kurohelper-db/models"
-	"github.com/sirupsen/logrus"
 )
 
 var (
+	/// 資料庫連線變數
 	Dbs *gorm.DB
 )
 
+// 初始化資料庫連線
 func InitDsn(config models.Config) error {
 	dsn := fmt.Sprintf("user=%s password=%s dbname=%s port=%s sslmode=disable",
 		config.DBOwner,
@@ -26,12 +27,10 @@ func InitDsn(config models.Config) error {
 	// get connect db variable
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		logrus.Errorf("連接資料庫失敗: %v", err)
 		return err
 	}
 	sqlDB, err := db.DB()
 	if err != nil {
-		logrus.Errorf("無法取得 sql.DB: %v", err)
 		return err
 	}
 

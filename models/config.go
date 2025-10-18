@@ -1,12 +1,8 @@
 package models
 
-type InitConfig struct {
+type Config struct {
 	DBOwner    string
 	DBPassword string
-	DBPort     int
-	DBConfig   []DBConfig
-}
-
-type DBConfig struct {
-	DBName string
+	DBName     string
+	DBPort     string
 }

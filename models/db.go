@@ -49,6 +49,7 @@ type (
 		GameErogsID int    `gorm:"primaryKey;autoIncrement:false"`
 		HasPlayed   bool
 		InWish      bool
+		CompletedAt *time.Time
 		CreatedAt   time.Time `gorm:"autoCreateTime"`
 		UpdatedAt   time.Time `gorm:"autoUpdateTime"`
 

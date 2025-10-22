@@ -14,6 +14,7 @@ func Migration() error {
 
 	Dbs.AutoMigrate(&models.ZhtwToJp{})
 	Dbs.AutoMigrate(&models.SeiyaCorrespond{})
+	Dbs.AutoMigrate(&models.DiscordAllowList{})
 	Dbs.AutoMigrate(
 		&models.User{},
 		&models.BrandErogs{},

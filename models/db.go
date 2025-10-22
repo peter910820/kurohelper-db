@@ -57,6 +57,14 @@ type (
 	}
 )
 
+type DiscordAllowList struct {
+	ID         string    `gorm:"primaryKey"`
+	Kind       string    `gorm:"not null"`
+	Permission int       `gorm:"not null"`
+	CreatedAt  time.Time `gorm:"autoCreateTime"`
+	UpdatedAt  time.Time `gorm:"autoUpdateTime"`
+}
+
 func (ZhtwToJp) TableName() string {
 	return "zhtw_to_jp"
 }

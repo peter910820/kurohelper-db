@@ -19,6 +19,7 @@ type (
 	}
 )
 
+// user data
 type (
 	User struct {
 		ID        string    `gorm:"primaryKey" json:"id"`

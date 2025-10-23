@@ -21,39 +21,39 @@ type (
 
 type (
 	User struct {
-		ID        string `gorm:"primaryKey"`
-		Name      string
-		CreatedAt time.Time `gorm:"autoCreateTime"`
-		UpdatedAt time.Time `gorm:"autoUpdateTime"`
+		ID        string    `gorm:"primaryKey" json:"id"`
+		Name      string    `json:"name"`
+		CreatedAt time.Time `gorm:"autoCreateTime" json:"createdAt"`
+		UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
 	}
 
 	GameErogs struct {
-		ID           int `gorm:"primaryKey;autoIncrement:false"`
-		BrandErogsID int
-		Name         string    `gorm:"unique"` // 遊戲名稱(批評空間)
-		CreatedAt    time.Time `gorm:"autoCreateTime"`
-		UpdatedAt    time.Time `gorm:"autoUpdateTime"`
+		ID           int       `gorm:"primaryKey;autoIncrement:false" json:"id"`
+		BrandErogsID int       `json:"brandErogsId"`
+		Name         string    `gorm:"unique" json:"name"` // 遊戲名稱(批評空間)
+		CreatedAt    time.Time `gorm:"autoCreateTime" json:"createdAt"`
+		UpdatedAt    time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
 
-		BrandErogs *BrandErogs `gorm:"foreignKey:BrandErogsID;references:ID"` // 單向 preload
+		BrandErogs *BrandErogs `gorm:"foreignKey:BrandErogsID;references:ID" json:"brandErogs,omitempty"` // 單向 preload
 	}
 
 	BrandErogs struct {
-		ID        int       `gorm:"primaryKey;autoIncrement:false"`
-		Name      string    `gorm:"unique"`
-		CreatedAt time.Time `gorm:"autoCreateTime"`
-		UpdatedAt time.Time `gorm:"autoUpdateTime"`
+		ID        int       `gorm:"primaryKey;autoIncrement:false" json:"id"`
+		Name      string    `gorm:"unique" json:"name"`
+		CreatedAt time.Time `gorm:"autoCreateTime" json:"createdAt"`
+		UpdatedAt time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
 	}
 
 	UserGameErogs struct {
-		UserID      string `gorm:"primaryKey"`
-		GameErogsID int    `gorm:"primaryKey;autoIncrement:false"`
-		HasPlayed   bool
-		InWish      bool
-		CompletedAt *time.Time
-		CreatedAt   time.Time `gorm:"autoCreateTime"`
-		UpdatedAt   time.Time `gorm:"autoUpdateTime"`
+		UserID      string     `gorm:"primaryKey" json:"userId"`
+		GameErogsID int        `gorm:"primaryKey;autoIncrement:false" json:"gameErogsId"`
+		HasPlayed   bool       `json:"hasPlayed"`
+		InWish      bool       `json:"inWish"`
+		CompletedAt *time.Time `json:"completedAt,omitempty"`
+		CreatedAt   time.Time  `gorm:"autoCreateTime" json:"createdAt"`
+		UpdatedAt   time.Time  `gorm:"autoUpdateTime" json:"updatedAt"`
 
-		GameErogs *GameErogs `gorm:"foreignKey:GameErogsID;references:ID"` // 單向 preload
+		GameErogs *GameErogs `gorm:"foreignKey:GameErogsID;references:ID" json:"gameErogs,omitempty"` // 單向 preload
 	}
 )
 

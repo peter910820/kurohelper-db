@@ -13,6 +13,7 @@ func GetUserData(userID string) ([]models.UserGameErogs, error) {
 		Preload("GameErogs").
 		Preload("GameErogs.BrandErogs").
 		Where("user_id = ?", userID).
+		Order("COALESCE(completed_at, created_at) DESC").
 		Find(&userGames).Error
 
 	if err != nil {

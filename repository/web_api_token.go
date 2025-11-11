@@ -3,21 +3,21 @@ package repository
 import (
 	"time"
 
-	kurohelperdb "github.com/peter910820/kurohelper-db"
 	"github.com/peter910820/kurohelper-db/models"
+	"gorm.io/gorm"
 )
 
 // 取出所有的web api token
-func GetWebAPIToken() ([]models.WebAPIToken, error) {
+func GetWebAPIToken(db *gorm.DB) ([]models.WebAPIToken, error) {
 	var tokens []models.WebAPIToken
-	if err := kurohelperdb.Dbs.Find(&tokens).Error; err != nil {
+	if err := db.Find(&tokens).Error; err != nil {
 		return nil, err
 	}
 	return tokens, nil
 }
 
 // expiresDuration為Token的有效時間，無期限expiresDuration傳0
-func CreateWebAPIToken(id string, expiresDuration time.Duration) error {
+func CreateWebAPIToken(db *gorm.DB, id string, expiresDuration time.Duration) error {
 	var expiresAt *time.Time
 
 	if expiresDuration > 0 {
@@ -30,7 +30,7 @@ func CreateWebAPIToken(id string, expiresDuration time.Duration) error {
 		ExpiresAt: expiresAt,
 	}
 
-	if err := kurohelperdb.Dbs.Create(token).Error; err != nil {
+	if err := db.Create(token).Error; err != nil {
 		return err
 	}
 

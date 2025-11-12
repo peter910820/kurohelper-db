@@ -4,7 +4,7 @@ package kurohelperdb
 func GetAllSeiyaCorrespond() ([]SeiyaCorrespond, error) {
 	var results []SeiyaCorrespond
 
-	err := Dbs.Find(&results).Error
+	err := dbs.Find(&results).Error
 
 	if err != nil {
 		return results, err

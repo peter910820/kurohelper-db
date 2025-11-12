@@ -10,7 +10,7 @@ func GetDiscordAllowListByKind(kind string) ([]DiscordAllowList, error) {
 		return nil, ErrParameterNotFound
 	}
 
-	err := Dbs.Where("kind = ?", kind).Find(&results).Error
+	err := dbs.Where("kind = ?", kind).Find(&results).Error
 	if err != nil {
 		return nil, err
 	}

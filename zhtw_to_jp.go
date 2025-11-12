@@ -4,7 +4,7 @@ package kurohelperdb
 func GetAllZhtwToJp() ([]ZhtwToJp, error) {
 	var results []ZhtwToJp
 
-	err := Dbs.Find(&results).Error
+	err := dbs.Find(&results).Error
 
 	if err != nil {
 		return results, err

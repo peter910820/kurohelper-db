@@ -10,7 +10,7 @@ import (
 func GetUserData(userID string) ([]UserGameErogs, error) {
 	var userGames []UserGameErogs
 
-	err := Dbs.
+	err := dbs.
 		Preload("GameErogs").
 		Preload("GameErogs.BrandErogs").
 		Where("user_id = ?", userID).
@@ -27,7 +27,7 @@ func GetUserData(userID string) ([]UserGameErogs, error) {
 func FindOrCreateUser(userID string, userName string) (User, error) {
 	var user User
 
-	err := Dbs.Where("id = ?", userID).FirstOrCreate(&user, User{ID: userID, Name: userName}).Error
+	err := dbs.Where("id = ?", userID).FirstOrCreate(&user, User{ID: userID, Name: userName}).Error
 	if err != nil {
 		return user, err
 	}
@@ -47,13 +47,13 @@ func UpsertUserGameErogs(userID string, gameErogsID int, hasPlayed bool, inWish 
 
 	if !completeDate.IsZero() {
 		ug.CompletedAt = &completeDate
-		return Dbs.Clauses(clause.OnConflict{
+		return dbs.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_erogs_id"}},
 			DoUpdates: clause.AssignmentColumns([]string{"has_played", "in_wish", "updated_at", "completed_at"}),
 		}).Create(ug).Error
 	}
 
-	return Dbs.Clauses(clause.OnConflict{
+	return dbs.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_erogs_id"}},
 		DoUpdates: clause.AssignmentColumns([]string{"has_played", "in_wish", "updated_at"}),
 	}).Create(ug).Error

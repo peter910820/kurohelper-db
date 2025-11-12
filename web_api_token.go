@@ -7,7 +7,7 @@ import (
 // 取出所有的web api token
 func GetWebAPIToken() ([]WebAPIToken, error) {
 	var tokens []WebAPIToken
-	if err := Dbs.Find(&tokens).Error; err != nil {
+	if err := dbs.Find(&tokens).Error; err != nil {
 		return nil, err
 	}
 	return tokens, nil
@@ -27,7 +27,7 @@ func CreateWebAPIToken(id string, expiresDuration time.Duration) error {
 		ExpiresAt: expiresAt,
 	}
 
-	if err := Dbs.Create(token).Error; err != nil {
+	if err := dbs.Create(token).Error; err != nil {
 		return err
 	}
 

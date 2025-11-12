@@ -12,7 +12,7 @@ func UpsertUserGameErogsTransaction(txInput UpsertUserGameErogsTXInput) error {
 	var gameErogs GameErogs
 	var brandErogs BrandErogs
 
-	err := Dbs.Transaction(func(tx *gorm.DB) error {
+	err := dbs.Transaction(func(tx *gorm.DB) error {
 		// 1. 確保 User 存在
 		if err := tx.Where("id = ?", txInput.UserID).FirstOrCreate(&user, User{ID: txInput.UserID, Name: txInput.UserName}).Error; err != nil {
 			return err

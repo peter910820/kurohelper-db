@@ -4,7 +4,7 @@ package kurohelperdb
 func FindOrCreateGameErogs(gameID int, gameName string, brandErogsID int) (GameErogs, error) {
 	var gameErogs GameErogs
 
-	err := Dbs.Where("id = ?", gameID).FirstOrCreate(&gameErogs, GameErogs{ID: gameID, Name: gameName, BrandErogsID: brandErogsID}).Error
+	err := dbs.Where("id = ?", gameID).FirstOrCreate(&gameErogs, GameErogs{ID: gameID, Name: gameName, BrandErogsID: brandErogsID}).Error
 	if err != nil {
 		return gameErogs, err
 	}

@@ -34,7 +34,6 @@ func UpsertUserGameErogsTransaction(txInput UpsertUserGameErogsTXInput) error {
 			HasPlayed:   txInput.HasPlayed,
 			InWish:      txInput.InWish,
 			UpdatedAt:   time.Now(),
-			CompletedAt: &txInput.CompleteDate,
 		}
 		// 4. 建立 UserGame
 		if txInput.CompleteDate.IsZero() {
@@ -46,6 +45,7 @@ func UpsertUserGameErogsTransaction(txInput UpsertUserGameErogsTXInput) error {
 				return result.Error
 			}
 		} else {
+			ug.CompletedAt = &txInput.CompleteDate
 			result := tx.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_erogs_id"}},
 				DoUpdates: clause.AssignmentColumns([]string{"has_played", "in_wish", "updated_at", "completed_at"}),

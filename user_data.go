@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-// 取得指定使用著遊玩資料
+// 取得指定使用者資料
 func GetUser(userID string) (User, error) {
 	var user User
 
@@ -18,7 +18,8 @@ func GetUser(userID string) (User, error) {
 	return user, nil
 }
 
-func GetAllUser(userID string) ([]User, error) {
+// 取得所有使用者資料
+func GetAllUser() ([]User, error) {
 	var user []User
 
 	err := dbs.Find(&user).Error
@@ -29,6 +30,7 @@ func GetAllUser(userID string) ([]User, error) {
 	return user, nil
 }
 
+// 取得特定使用者的單筆遊玩資料
 func GetUserGameErogs(userID string, gameErogsID int) (UserGameErogs, error) {
 	var gameRecord UserGameErogs
 
@@ -38,6 +40,18 @@ func GetUserGameErogs(userID string, gameErogsID int) (UserGameErogs, error) {
 	}
 
 	return gameRecord, nil
+}
+
+// 取得特定使用者的全部遊玩資料
+func GetUserGameErogsByUserID(userID string) ([]UserGameErogs, error) {
+	var userGameErogs []UserGameErogs
+
+	err := dbs.Where("user_id = ?", userID).Find(&userGameErogs).Error
+	if err != nil {
+		return userGameErogs, err
+	}
+
+	return userGameErogs, nil
 }
 
 // 取得指定使用著遊玩資料

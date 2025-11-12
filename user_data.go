@@ -7,6 +7,40 @@ import (
 )
 
 // 取得指定使用著遊玩資料
+func GetUser(userID string) (User, error) {
+	var user User
+
+	err := dbs.First(&user, "id = ?", userID).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func GetAllUser(userID string) ([]User, error) {
+	var user []User
+
+	err := dbs.Find(&user).Error
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func GetUserGameErogs(userID string, gameErogsID int) (UserGameErogs, error) {
+	var gameRecord UserGameErogs
+
+	err := dbs.First(&gameRecord, "user_id = ? AND game_erogs_id = ?", userID, gameErogsID).Error
+	if err != nil {
+		return gameRecord, err
+	}
+
+	return gameRecord, nil
+}
+
+// 取得指定使用著遊玩資料
 func GetUserData(userID string) ([]UserGameErogs, error) {
 	var userGames []UserGameErogs
 

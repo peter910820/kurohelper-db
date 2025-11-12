@@ -14,3 +14,9 @@ type UpsertUserGameErogsTXInput struct {
 	InWish       bool
 	CompleteDate time.Time
 }
+
+type BrandCountOuput struct {
+	BrandID   int
+	BrandName string
+	Count     int
+}

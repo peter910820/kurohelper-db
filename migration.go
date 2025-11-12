@@ -3,7 +3,6 @@ package kurohelperdb
 import (
 	"errors"
 
-	"github.com/peter910820/kurohelper-db/models"
 	"gorm.io/gorm"
 )
 
@@ -13,15 +12,15 @@ func Migration(db *gorm.DB) error {
 		return errors.New("DB not initialized")
 	}
 
-	db.AutoMigrate(&models.ZhtwToJp{})
-	db.AutoMigrate(&models.SeiyaCorrespond{})
-	db.AutoMigrate(&models.WebAPIToken{})
-	db.AutoMigrate(&models.DiscordAllowList{})
+	db.AutoMigrate(&ZhtwToJp{})
+	db.AutoMigrate(&SeiyaCorrespond{})
+	db.AutoMigrate(&WebAPIToken{})
+	db.AutoMigrate(&DiscordAllowList{})
 	db.AutoMigrate(
-		&models.User{},
-		&models.BrandErogs{},
-		&models.GameErogs{},
-		&models.UserGameErogs{},
+		&User{},
+		&BrandErogs{},
+		&GameErogs{},
+		&UserGameErogs{},
 	)
 
 	return nil

@@ -1,18 +1,16 @@
-package repository
+package kurohelperdb
 
 import (
 	"time"
 
-	"github.com/peter910820/kurohelper-db/models"
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 // 取得指定使用著遊玩資料
-func GetUserData(db *gorm.DB, userID string) ([]models.UserGameErogs, error) {
-	var userGames []models.UserGameErogs
+func GetUserData(userID string) ([]UserGameErogs, error) {
+	var userGames []UserGameErogs
 
-	err := db.
+	err := Dbs.
 		Preload("GameErogs").
 		Preload("GameErogs.BrandErogs").
 		Where("user_id = ?", userID).
@@ -26,10 +24,10 @@ func GetUserData(db *gorm.DB, userID string) ([]models.UserGameErogs, error) {
 }
 
 // 確保指定的User存在，不存在就直接建立
-func FindOrCreateUser(db *gorm.DB, userID string, userName string) (models.User, error) {
-	var user models.User
+func FindOrCreateUser(userID string, userName string) (User, error) {
+	var user User
 
-	err := db.Where("id = ?", userID).FirstOrCreate(&user, models.User{ID: userID, Name: userName}).Error
+	err := Dbs.Where("id = ?", userID).FirstOrCreate(&user, User{ID: userID, Name: userName}).Error
 	if err != nil {
 		return user, err
 	}
@@ -38,8 +36,8 @@ func FindOrCreateUser(db *gorm.DB, userID string, userName string) (models.User,
 }
 
 // 建立或更新指定的UserGameErogs資料
-func UpsertUserGameErogs(db *gorm.DB, userID string, gameErogsID int, hasPlayed bool, inWish bool, completeDate time.Time) error {
-	ug := models.UserGameErogs{
+func UpsertUserGameErogs(userID string, gameErogsID int, hasPlayed bool, inWish bool, completeDate time.Time) error {
+	ug := UserGameErogs{
 		UserID:      userID,
 		GameErogsID: gameErogsID,
 		HasPlayed:   hasPlayed,
@@ -49,13 +47,13 @@ func UpsertUserGameErogs(db *gorm.DB, userID string, gameErogsID int, hasPlayed 
 
 	if !completeDate.IsZero() {
 		ug.CompletedAt = &completeDate
-		return db.Clauses(clause.OnConflict{
+		return Dbs.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_erogs_id"}},
 			DoUpdates: clause.AssignmentColumns([]string{"has_played", "in_wish", "updated_at", "completed_at"}),
 		}).Create(ug).Error
 	}
 
-	return db.Clauses(clause.OnConflict{
+	return Dbs.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_erogs_id"}},
 		DoUpdates: clause.AssignmentColumns([]string{"has_played", "in_wish", "updated_at"}),
 	}).Create(ug).Error

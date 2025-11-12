@@ -6,12 +6,13 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-
-	"github.com/peter910820/kurohelper-db/models"
 )
 
+// 全域連線池
+var Dbs *gorm.DB
+
 // 初始化資料庫連線
-func InitDsn(config models.Config) (*gorm.DB, error) {
+func InitDsn(config Config) error {
 	dsn := fmt.Sprintf("user=%s password=%s dbname=%s port=%s sslmode=disable",
 		config.DBOwner,
 		config.DBPassword,
@@ -22,11 +23,12 @@ func InitDsn(config models.Config) (*gorm.DB, error) {
 	// get connect db variable
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		return err
 	}
+
 	sqlDB, err := db.DB()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	sqlDB.SetMaxOpenConns(30)
@@ -34,5 +36,7 @@ func InitDsn(config models.Config) (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	sqlDB.SetConnMaxIdleTime(10 * time.Minute)
 
-	return db, nil
+	Dbs = db
+
+	return nil
 }

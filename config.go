@@ -1,4 +1,4 @@
-package models
+package kurohelperdb
 
 type Config struct {
 	DBOwner    string

@@ -10,7 +10,7 @@ import (
 func GetUserGameErogs(userID string, gameErogsID int) (UserGameErogs, error) {
 	var gameRecord UserGameErogs
 
-	err := dbs.First(&gameRecord, "user_id = ? AND game_erogs_id = ?", userID, gameErogsID).Error
+	err := Dbs.First(&gameRecord, "user_id = ? AND game_erogs_id = ?", userID, gameErogsID).Error
 	if err != nil {
 		return gameRecord, err
 	}
@@ -22,7 +22,7 @@ func GetUserGameErogs(userID string, gameErogsID int) (UserGameErogs, error) {
 func GetUserGameErogsByUserID(userID string) ([]UserGameErogs, error) {
 	var userGameErogs []UserGameErogs
 
-	err := dbs.Where("user_id = ?", userID).Find(&userGameErogs).Error
+	err := Dbs.Where("user_id = ?", userID).Find(&userGameErogs).Error
 	if err != nil {
 		return userGameErogs, err
 	}
@@ -32,7 +32,7 @@ func GetUserGameErogsByUserID(userID string) ([]UserGameErogs, error) {
 
 // 刪除指定的UserGameErogs資料
 func DeleteUserGameErogs(userID string, gameErogsID int) error {
-	result := dbs.Delete(
+	result := Dbs.Delete(
 		&UserGameErogs{},
 		"user_id = ? AND game_erogs_id = ?",
 		userID, gameErogsID,
@@ -59,13 +59,13 @@ func UpsertUserGameErogs(userID string, gameErogsID int, hasPlayed bool, inWish 
 
 	if !completeDate.IsZero() {
 		ug.CompletedAt = &completeDate
-		return dbs.Clauses(clause.OnConflict{
+		return Dbs.Clauses(clause.OnConflict{
 			Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_erogs_id"}},
 			DoUpdates: clause.AssignmentColumns([]string{"has_played", "in_wish", "updated_at", "completed_at"}),
 		}).Create(ug).Error
 	}
 
-	return dbs.Clauses(clause.OnConflict{
+	return Dbs.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_erogs_id"}},
 		DoUpdates: clause.AssignmentColumns([]string{"has_played", "in_wish", "updated_at"}),
 	}).Create(ug).Error

@@ -4,7 +4,7 @@ package kurohelperdb
 func GetUser(userID string) (User, error) {
 	var user User
 
-	err := dbs.First(&user, "id = ?", userID).Error
+	err := Dbs.First(&user, "id = ?", userID).Error
 	if err != nil {
 		return user, err
 	}
@@ -16,7 +16,7 @@ func GetUser(userID string) (User, error) {
 func GetAllUser() ([]User, error) {
 	var user []User
 
-	err := dbs.Find(&user).Error
+	err := Dbs.Find(&user).Error
 	if err != nil {
 		return user, err
 	}
@@ -28,7 +28,7 @@ func GetAllUser() ([]User, error) {
 func GetUserData(userID string) ([]UserGameErogs, error) {
 	var userGames []UserGameErogs
 
-	err := dbs.
+	err := Dbs.
 		Preload("GameErogs").
 		Preload("GameErogs.BrandErogs").
 		Where("user_id = ?", userID).
@@ -45,7 +45,7 @@ func GetUserData(userID string) ([]UserGameErogs, error) {
 func FindOrCreateUser(userID string, userName string) (User, error) {
 	var user User
 
-	err := dbs.Where("id = ?", userID).FirstOrCreate(&user, User{ID: userID, Name: userName}).Error
+	err := Dbs.Where("id = ?", userID).FirstOrCreate(&user, User{ID: userID, Name: userName}).Error
 	if err != nil {
 		return user, err
 	}

@@ -1,13 +1,23 @@
 package kurohelperdb
 
+import "gorm.io/gorm"
+
 // 確保指定的GameErogs存在，不存在就直接建立
-func FindOrCreateGameErogs(gameID int, gameName string, brandErogsID int) (GameErogs, error) {
-	var gameErogs GameErogs
-
-	err := dbs.Where("id = ?", gameID).FirstOrCreate(&gameErogs, GameErogs{ID: gameID, Name: gameName, BrandErogsID: brandErogsID}).Error
-	if err != nil {
-		return gameErogs, err
+func EnsureGameErogs(gameID int, gameName string, brandID int) (*GameErogs, error) {
+	var game GameErogs
+	if err := Dbs.Where("id = ?", gameID).
+		FirstOrCreate(&game, GameErogs{ID: gameID, Name: gameName, BrandErogsID: brandID}).Error; err != nil {
+		return nil, err
 	}
+	return &game, nil
+}
 
-	return gameErogs, nil
+// 確保指定的GameErogs存在，不存在就直接建立(Tx版本)
+func EnsureGameErogsTx(tx *gorm.DB, gameID int, gameName string, brandID int) (*GameErogs, error) {
+	var game GameErogs
+	if err := tx.Where("id = ?", gameID).
+		FirstOrCreate(&game, GameErogs{ID: gameID, Name: gameName, BrandErogsID: brandID}).Error; err != nil {
+		return nil, err
+	}
+	return &game, nil
 }

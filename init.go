@@ -9,7 +9,7 @@ import (
 )
 
 // 全域連線池
-var dbs *gorm.DB
+var Dbs *gorm.DB
 
 // 初始化資料庫連線
 func InitDsn(config Config) error {
@@ -36,7 +36,7 @@ func InitDsn(config Config) error {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	sqlDB.SetConnMaxIdleTime(10 * time.Minute)
 
-	dbs = db
+	Dbs = db
 
 	return nil
 }

@@ -2,7 +2,7 @@ package kurohelperdb
 
 func BrandCount(userID string, hasPlayed bool, inWish bool) ([]BrandCountOuput, error) {
 	var brandData []BrandCountOuput
-	err := dbs.
+	err := Dbs.
 		Table("user_game_erogs AS uge").
 		Select("b.id AS brand_id, b.name AS brand_name, COUNT(*) AS count").
 		Joins("JOIN game_erogs AS g ON uge.game_erogs_id = g.id").

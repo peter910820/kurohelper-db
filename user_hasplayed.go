@@ -41,7 +41,7 @@ func CreateUserHasPlayedTx(tx *gorm.DB, userID string, gameErogsID int, complete
 		CompletedAt: completedAt,
 	}
 
-	if err := Dbs.Create(&userHasPlayed).Error; err != nil {
+	if err := tx.Create(&userHasPlayed).Error; err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
 			return ErrUniqueViolation

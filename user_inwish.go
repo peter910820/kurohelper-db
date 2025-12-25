@@ -7,6 +7,23 @@ import (
 	"gorm.io/gorm"
 )
 
+func SelectUserInWish(userID string) ([]UserInWish, error) {
+	var inWish []UserInWish
+
+	err := Dbs.
+		// Preload("User").
+		Preload("GameErogs").
+		Preload("GameErogs.BrandErogs").
+		Where("user_id = ?", userID).
+		Order("created_at DESC").
+		Find(&inWish).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return inWish, nil
+}
+
 func CreateUserInWish(userID string, gameErogsID int) error {
 	userInWish := UserInWish{
 		UserID:      userID,

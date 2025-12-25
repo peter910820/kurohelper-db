@@ -8,6 +8,23 @@ import (
 	"gorm.io/gorm"
 )
 
+func SelectUserHasPlayed(userID string) ([]UserHasPlayed, error) {
+	var hasPlayed []UserHasPlayed
+
+	err := Dbs.
+		// Preload("User").
+		Preload("GameErogs").
+		Preload("GameErogs.BrandErogs").
+		Where("user_id = ?", userID).
+		Order("COALESCE(completed_at, created_at) DESC").
+		Find(&hasPlayed).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return hasPlayed, nil
+}
+
 func CreateUserHasPlayed(userID string, gameErogsID int, completedAt *time.Time) error {
 	userHasPlayed := UserHasPlayed{
 		UserID:      userID,

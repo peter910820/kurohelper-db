@@ -1,6 +1,11 @@
 package kurohelperdb
 
-import "gorm.io/gorm"
+import (
+	"errors"
+
+	"github.com/jackc/pgx/v5/pgconn"
+	"gorm.io/gorm"
+)
 
 func CreateUserInWish(userID string, gameErogsID int) error {
 	userInWish := UserInWish{
@@ -9,6 +14,10 @@ func CreateUserInWish(userID string, gameErogsID int) error {
 	}
 
 	if err := Dbs.Create(&userInWish).Error; err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			return ErrUniqueViolation
+		}
 		return err
 	}
 
@@ -16,11 +25,11 @@ func CreateUserInWish(userID string, gameErogsID int) error {
 }
 
 func DeleteUserInWish(userID string, gameErogsID int) error {
-	result := Dbs.
+	err := Dbs.
 		Where("user_id = ? AND game_erogs_id = ?", userID, gameErogsID).
 		Delete(&UserInWish{}).Error
 
-	return result
+	return err
 }
 
 func CreateUserInWishTx(tx *gorm.DB, userID string, gameErogsID int) error {
@@ -30,6 +39,10 @@ func CreateUserInWishTx(tx *gorm.DB, userID string, gameErogsID int) error {
 	}
 
 	if err := tx.Create(&userInWish).Error; err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			return ErrUniqueViolation
+		}
 		return err
 	}
 
@@ -37,9 +50,9 @@ func CreateUserInWishTx(tx *gorm.DB, userID string, gameErogsID int) error {
 }
 
 func DeleteUserInWishTx(tx *gorm.DB, userID string, gameErogsID int) error {
-	result := tx.
+	err := tx.
 		Where("user_id = ? AND game_erogs_id = ?", userID, gameErogsID).
 		Delete(&UserInWish{}).Error
 
-	return result
+	return err
 }

@@ -1,8 +1,10 @@
 package kurohelperdb
 
 import (
+	"errors"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	"gorm.io/gorm"
 )
 
@@ -14,6 +16,10 @@ func CreateUserHasPlayed(userID string, gameErogsID int, completedAt *time.Time)
 	}
 
 	if err := Dbs.Create(&userHasPlayed).Error; err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			return ErrUniqueViolation
+		}
 		return err
 	}
 
@@ -21,11 +27,11 @@ func CreateUserHasPlayed(userID string, gameErogsID int, completedAt *time.Time)
 }
 
 func DeleteUserHasPlayed(userID string, gameErogsID int) error {
-	result := Dbs.
+	err := Dbs.
 		Where("user_id = ? AND game_erogs_id = ?", userID, gameErogsID).
 		Delete(&UserHasPlayed{}).Error
 
-	return result
+	return err
 }
 
 func CreateUserHasPlayedTx(tx *gorm.DB, userID string, gameErogsID int, completedAt *time.Time) error {
@@ -36,6 +42,10 @@ func CreateUserHasPlayedTx(tx *gorm.DB, userID string, gameErogsID int, complete
 	}
 
 	if err := Dbs.Create(&userHasPlayed).Error; err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			return ErrUniqueViolation
+		}
 		return err
 	}
 
@@ -43,9 +53,9 @@ func CreateUserHasPlayedTx(tx *gorm.DB, userID string, gameErogsID int, complete
 }
 
 func DeleteUserHasPlayedTx(tx *gorm.DB, userID string, gameErogsID int) error {
-	result := Dbs.
+	err := Dbs.
 		Where("user_id = ? AND game_erogs_id = ?", userID, gameErogsID).
 		Delete(&UserHasPlayed{}).Error
 
-	return result
+	return err
 }

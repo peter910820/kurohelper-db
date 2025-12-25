@@ -21,6 +21,8 @@ func Migration(db *gorm.DB) error {
 		&BrandErogs{},
 		&GameErogs{},
 		&UserGameErogs{},
+		&UserHasPlayed{},
+		&UserInWish{},
 	)
 
 	return nil

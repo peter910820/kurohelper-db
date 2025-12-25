@@ -56,6 +56,29 @@ type (
 
 		GameErogs *GameErogs `gorm:"foreignKey:GameErogsID;references:ID" json:"gameErogs,omitempty"` // 單向 preload
 	}
+
+	// 2025-12-25 separate two states
+	UserHasPlayed struct {
+		UserID      string     `gorm:"primaryKey" json:"userId"`
+		GameErogsID int        `gorm:"primaryKey;autoIncrement:false" json:"gameErogsId"`
+		CompletedAt *time.Time `json:"completedAt,omitempty"`
+		CreatedAt   time.Time  `gorm:"autoCreateTime" json:"createdAt"`
+		// UpdatedAt   time.Time  `gorm:"autoUpdateTime" json:"updatedAt"`
+
+		User      *User      `gorm:"foreignKey:UserID;references:ID" json:"user,omitempty"`
+		GameErogs *GameErogs `gorm:"foreignKey:GameErogsID;references:ID" json:"gameErogs,omitempty"` // 單向 preload
+	}
+
+	// 2025-12-25 separate two states
+	UserInWish struct {
+		UserID      string    `gorm:"primaryKey" json:"userId"`
+		GameErogsID int       `gorm:"primaryKey;autoIncrement:false" json:"gameErogsId"`
+		CreatedAt   time.Time `gorm:"autoCreateTime" json:"createdAt"`
+		// UpdatedAt   time.Time `gorm:"autoUpdateTime" json:"updatedAt"`
+
+		User      *User      `gorm:"foreignKey:UserID;references:ID" json:"user,omitempty"`
+		GameErogs *GameErogs `gorm:"foreignKey:GameErogsID;references:ID" json:"gameErogs,omitempty"` // 單向 preload
+	}
 )
 
 type DiscordAllowList struct {
